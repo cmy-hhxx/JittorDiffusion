@@ -170,7 +170,7 @@ def parse_args(input_args=None):
         "--train_batch_size", type=int, default=5, help="Batch size (per device) for the training dataloader."
     )
     parser.add_argument(
-        "--sample_batch_size", type=int, default=4, help="Batch size (per device) for sampling images."
+        "--sample_batch_size", type=int, default=2, help="Batch size (per device) for sampling images."
     )
     parser.add_argument("--num_train_epochs", type=int, default=1)
     parser.add_argument(
@@ -193,7 +193,7 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--learning_rate",
         type=float,
-        default=5e-4,
+        default=1e-4,
         help="Initial learning rate (after the potential warmup period) to use.",
     )
     parser.add_argument(
@@ -264,7 +264,7 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--rank",
         type=int,
-        default=4,
+        default=2,
         help=("The dimension of the LoRA update matrices."),
     )
 
@@ -513,9 +513,9 @@ def main(args):
     for name, param in unet.named_parameters():
         assert param.requires_grad == False, name
     # now we will add new LoRA weights to the attention layers
-    # 增加rank参数的值，这样可以增加模型对风格特征的捕捉能力。
+    # 增加rank参数的值，这样可以增加模型对风格特征的捕捉能力
     unet_lora_config = LoraConfig(
-        r=args.rank * 2,
+        r=args.rank * 4,
         lora_alpha=args.rank,
         init_lora_weights="gaussian",
         target_modules=["to_k", "to_q", "to_v", "to_out.0", "add_k_proj", "add_v_proj"],
