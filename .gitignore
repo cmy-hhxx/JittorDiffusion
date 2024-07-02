@@ -32,3 +32,4 @@ core
 __data__
 *.pyc
 *.egg-info
+.idea
