@@ -3,18 +3,19 @@ export HF_ENDPOINT="https://hf-mirror.com"
 
 MODEL_NAME="stabilityai/stable-diffusion-2-1"
 BASE_INSTANCE_DIR="/root/autodl-tmp/A/"
-OUTPUT_DIR_PREFIX="/root/autodl-tmp/result_1200_rank8/style_"
+OUTPUT_DIR_PREFIX="/root/autodl-tmp/result_2000_rank32_augment/style_"
 RESOLUTION=512
 TRAIN_BATCH_SIZE=1
 GRADIENT_ACCUMULATION_STEPS=1
-CHECKPOINTING_STEPS=100
-LEARNING_RATE=1e-5
+CHECKPOINTING_STEPS=200
+LEARNING_RATE=1e-4
 LR_SCHEDULER="constant"
 LR_WARMUP_STEPS=0
-MAX_TRAIN_STEPS=1200
+MAX_TRAIN_STEPS=2000
 SEED=41
 GPU_COUNT=1
 MAX_NUM=15
+RANK=16
 
 for ((folder_number = 0; folder_number <= $MAX_NUM; folder_number+=$GPU_COUNT)); do
     for ((gpu_id = 0; gpu_id < GPU_COUNT; gpu_id++)); do
@@ -22,7 +23,7 @@ for ((folder_number = 0; folder_number <= $MAX_NUM; folder_number+=$GPU_COUNT));
         if [ $current_folder_number -gt $MAX_NUM ]; then
             break
         fi
-        INSTANCE_DIR="${BASE_INSTANCE_DIR}/$(printf "%02d" $current_folder_number)/images"
+        INSTANCE_DIR="${BASE_INSTANCE_DIR}/$(printf "%02d" $current_folder_number)/images/augmented"
         OUTPUT_DIR="${OUTPUT_DIR_PREFIX}$(printf "%02d" $current_folder_number)"
         CUDA_VISIBLE_DEVICES=$gpu_id
         PROMPT=$(printf "style_%02d" $current_folder_number)
@@ -39,6 +40,7 @@ for ((folder_number = 0; folder_number <= $MAX_NUM; folder_number+=$GPU_COUNT));
             --lr_scheduler=$LR_SCHEDULER \
             --lr_warmup_steps=$LR_WARMUP_STEPS \
             --max_train_steps=$MAX_TRAIN_STEPS \
+            --rank=$RANK \
             --seed=$SEED"
 
         eval $COMMAND &

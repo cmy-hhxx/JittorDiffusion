@@ -264,7 +264,7 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--rank",
         type=int,
-        default=2,
+        default=16,
         help=("The dimension of the LoRA update matrices."),
     )
 
@@ -515,7 +515,7 @@ def main(args):
     # now we will add new LoRA weights to the attention layers
     # 增加rank参数的值，这样可以增加模型对风格特征的捕捉能力
     unet_lora_config = LoraConfig(
-        r=args.rank * 4,
+        r=args.rank,
         lora_alpha=args.rank,
         init_lora_weights="gaussian",
         target_modules=["to_k", "to_q", "to_v", "to_out.0", "add_k_proj", "add_v_proj"],
