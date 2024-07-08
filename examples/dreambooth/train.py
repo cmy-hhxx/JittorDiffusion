@@ -264,6 +264,7 @@ def parse_args(input_args=None):
     parser.add_argument(
         "--rank",
         type=int,
+
         default=16,
         help=("The dimension of the LoRA update matrices."),
     )
