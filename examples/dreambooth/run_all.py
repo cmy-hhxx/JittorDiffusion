@@ -3,7 +3,7 @@ import jittor as jt
 import datetime
 from JDiffusion.pipelines import StableDiffusionPipeline
 
-max_num = 15
+max_num = 1
 dataset_root = "/root/autodl-tmp/A/"
 
 model_id = "stabilityai/stable-diffusion-2-1"
@@ -13,7 +13,7 @@ with jt.no_grad():
         taskid = "{:0>2d}".format(tempid)
         pipe = StableDiffusionPipeline.from_pretrained(model_id).to("cuda")
         # pipe = StableDiffusionPipeline.from_pretrained(model_id, cache_dir="").to("cuda")
-        pipe.load_lora_weights(f"/root/autodl-tmp/result_1600_rank64_augment/style_{taskid}")
+        pipe.load_lora_weights(f"/root/autodl-tmp/result_1000_rank2_augment/style_{taskid}")
 
         # load json
         with open(f"{dataset_root}/{taskid}/prompt.json", "r") as file:
